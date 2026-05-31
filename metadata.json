@@ -1,0 +1,6 @@
+{
+  "name": "MeshLearn",
+  "description": "A decentralized collaborative peer-to-peer mobile learning application with ad-hoc wireless networking simulation, local SQLite indicators, and active seed file drop configurations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
