@@ -373,51 +373,57 @@ export default function App() {
 
   if (!activeUser) {
     return (
-      <div className="bg-[#070b16] min-h-screen text-[#cbd5e1] font-sans relative mesh-pattern flex flex-col justify-center items-center px-4 py-8 select-none">
-        
+      <div className="bg-[#030712] min-h-screen text-[#cbd5e1] font-sans relative mesh-pattern flex flex-col justify-center items-center px-4 py-12 select-none overflow-hidden">
+        {/* Futuristic premium aesthetic flares */}
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-sky-500/10 rounded-full opacity-40 blur-[130px] pointer-events-none" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-505 opacity-10 rounded-full blur-[135px] pointer-events-none" />
+
         {/* Banner with signal design element */}
-        <div className="max-w-md w-full text-center mb-6 animate-fade-in">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-sky-950/40 border border-sky-800/30 font-mono text-[10px] font-bold text-sky-400 rounded-full mb-3 uppercase tracking-wider">
-            <Radio className="w-3.5 h-3.5 text-sky-400 animate-pulse" /> School ClassMesh local portal
+        <div className="max-w-md w-full text-center mb-8 animate-fade-in relative z-10">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-sky-950/35 border border-sky-500/25 font-mono text-[9px] font-bold text-sky-450 rounded-full mb-4 uppercase tracking-widest shadow-sm select-none">
+            <Radio className="w-3.5 h-3.5 text-sky-40 animate-pulse" /> School ClassMesh local portal
           </div>
-          <div className="flex items-center justify-center gap-3 mb-1">
-            <div className="bg-[#0ea5e9] p-2 rounded-2xl text-white shadow-xl shadow-sky-500/10">
-              <Network className="w-5 h-5" />
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <div className="bg-gradient-to-tr from-sky-500 to-indigo-600 p-2.5 rounded-2xl text-white shadow-xl shadow-sky-500/15">
+              <Network className="w-6 h-6 animate-pulse" />
             </div>
-            <h1 className="font-display font-black text-xl text-white tracking-tight">MeshLearn</h1>
+            <h1 className="font-display font-black text-3xl text-white tracking-tight leading-none">
+              Mesh<span className="accent-gradient-text font-black">Learn</span>
+            </h1>
           </div>
-          <p className="text-[11px] text-slate-400 max-w-sm mx-auto leading-relaxed mt-2 font-medium">
+          <p className="text-xs text-slate-450 max-w-sm mx-auto leading-relaxed mt-3.5 font-medium">
             Standard offline network gateway. Register with your school credentials below to access and decrypt your classmate Mesh classroom channels.
           </p>
         </div>
 
         {/* Credentials Form Box */}
-        <div className="bg-[#0a0f1d] border border-[#1e294b] rounded-3xl p-6 shadow-2xl w-full max-w-sm relative overflow-hidden backdrop-blur-md">
+        <div className="bg-[#090f1e]/90 border border-slate-800/80 rounded-3xl p-7 shadow-2xl w-full max-w-sm relative overflow-hidden backdrop-blur-xl cyber-glow">
           {/* Card subtle flare effect */}
-          <div className="absolute top-0 right-0 w-32 h-32 bg-sky-500/10 rounded-full blur-2xl pointer-events-none" />
+          <div className="absolute -top-12 -right-12 w-28 h-28 bg-sky-500/10 rounded-full blur-2xl pointer-events-none" />
+          <div className="absolute -bottom-12 -left-12 w-28 h-28 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none" />
 
           {/* Form Tabs Switcher */}
-          <div className="grid grid-cols-2 gap-1 bg-[#070b16] border border-[#1e294b] p-1 rounded-xl select-none font-bold text-[10px] uppercase mb-5">
+          <div className="grid grid-cols-2 gap-1 bg-slate-950/85 border border-slate-800/50 p-1.5 rounded-xl select-none font-bold text-[10px] uppercase mb-6">
             <button
               type="button"
               onClick={() => setAuthMode('login')}
-              className={`py-1.5 rounded-lg transition-all cursor-pointer ${authMode === 'login' ? 'bg-sky-600 font-extrabold text-white shadow-md' : 'text-slate-400 hover:text-white'}`}
+              className={`py-2 rounded-lg transition-all duration-300 font-bold uppercase tracking-wide cursor-pointer text-center ${authMode === 'login' ? 'bg-gradient-to-r from-sky-500 to-indigo-500 text-white shadow-md' : 'text-slate-400 hover:text-white'}`}
             >
               Log In
             </button>
             <button
               type="button"
               onClick={() => setAuthMode('signup')}
-              className={`py-1.5 rounded-lg transition-all cursor-pointer ${authMode === 'signup' ? 'bg-sky-600 font-extrabold text-white shadow-md' : 'text-slate-400 hover:text-white'}`}
+              className={`py-2 rounded-lg transition-all duration-300 font-bold uppercase tracking-wide cursor-pointer text-center ${authMode === 'signup' ? 'bg-gradient-to-r from-indigo-500 to-sky-500 text-white shadow-md' : 'text-slate-400 hover:text-white'}`}
             >
               Sign Up
             </button>
           </div>
 
           {authMode === 'login' ? (
-            <form onSubmit={handleGlobalLogin} className="space-y-4">
-              <div className="space-y-1">
-                <label className="block text-[10px] font-mono text-sky-400 uppercase font-bold tracking-wider">
+            <form onSubmit={handleGlobalLogin} className="space-y-4.5">
+              <div className="space-y-1.5">
+                <label className="block text-[10px] font-mono text-sky-400 uppercase font-bold tracking-widest pl-1">
                   School Email
                 </label>
                 <input 
@@ -426,12 +432,12 @@ export default function App() {
                   value={loginEmail}
                   onChange={(e) => setLoginEmail(e.target.value)}
                   placeholder="e.g. alex.j@university.edu"
-                  className="w-full bg-[#070b16] border border-[#1e294b] focus:border-sky-500 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-600 focus:outline-none"
+                  className="w-full bg-slate-950/90 border border-slate-800 hover:border-slate-700 focus:border-sky-500 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-650 focus:outline-none transition-all duration-200"
                 />
               </div>
 
-              <div className="space-y-1">
-                <label className="block text-[10px] font-mono text-sky-400 uppercase font-bold tracking-wider">
+              <div className="space-y-1.5">
+                <label className="block text-[10px] font-mono text-sky-400 uppercase font-bold tracking-widest pl-1">
                   Password
                 </label>
                 <input 
@@ -440,21 +446,21 @@ export default function App() {
                   value={loginPassword}
                   onChange={(e) => setLoginPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full bg-[#070b16] border border-[#1e294b] focus:border-sky-500 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-600 focus:outline-none"
+                  className="w-full bg-slate-950/90 border border-slate-800 hover:border-slate-700 focus:border-sky-500 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-650 focus:outline-none transition-all duration-200"
                 />
               </div>
 
               <button 
                 type="submit"
-                className="w-full bg-sky-600 hover:bg-sky-500 font-extrabold text-white py-2.5 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-lg active:scale-[0.98] transition-all cursor-pointer mt-2"
+                className="w-full bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 font-extrabold text-white py-3 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg hover:shadow-sky-500/10 active:scale-[0.98] transition-all cursor-pointer mt-5"
               >
                 Access Class Mesh <ChevronRight className="w-4 h-4" />
               </button>
             </form>
           ) : (
-            <form onSubmit={handleGlobalSignup} className="space-y-3">
-              <div className="space-y-1">
-                <label className="block text-[10px] font-mono text-sky-400 uppercase font-bold tracking-wider">
+            <form onSubmit={handleGlobalSignup} className="space-y-3.5">
+              <div className="space-y-1.5">
+                <label className="block text-[10px] font-mono text-sky-400 uppercase font-bold tracking-widest pl-1">
                   Full Student Name
                 </label>
                 <input 
@@ -463,12 +469,12 @@ export default function App() {
                   value={signupName}
                   onChange={(e) => setSignupName(e.target.value)}
                   placeholder="e.g. Alex Johnson"
-                  className="w-full bg-[#070b16] border border-[#1e294b] focus:border-sky-500 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-600 focus:outline-none"
+                  className="w-full bg-slate-950/90 border border-slate-800 hover:border-slate-700 focus:border-sky-500 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-650 focus:outline-none transition-all duration-200"
                 />
               </div>
 
-              <div className="space-y-1">
-                <label className="block text-[10px] font-mono text-sky-400 uppercase font-bold tracking-wider">
+              <div className="space-y-1.5">
+                <label className="block text-[10px] font-mono text-sky-400 uppercase font-bold tracking-widest pl-1">
                   School Email
                 </label>
                 <input 
@@ -477,12 +483,12 @@ export default function App() {
                   value={signupEmail}
                   onChange={(e) => setSignupEmail(e.target.value)}
                   placeholder="student@university.edu"
-                  className="w-full bg-[#070b16] border border-[#1e294b] focus:border-sky-500 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-600 focus:outline-none"
+                  className="w-full bg-slate-950/90 border border-slate-800 hover:border-slate-700 focus:border-sky-500 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-650 focus:outline-none transition-all duration-200"
                 />
               </div>
 
-              <div className="space-y-1">
-                <label className="block text-[10px] font-mono text-sky-400 uppercase font-bold tracking-wider">
+              <div className="space-y-1.5">
+                <label className="block text-[10px] font-mono text-sky-400 uppercase font-bold tracking-widest pl-1">
                   Password / Student PIN
                 </label>
                 <input 
@@ -491,18 +497,18 @@ export default function App() {
                   value={signupPassword}
                   onChange={(e) => setSignupPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full bg-[#070b16] border border-[#1e294b] focus:border-sky-500 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-600 focus:outline-none"
+                  className="w-full bg-slate-950/90 border border-slate-800 hover:border-slate-700 focus:border-sky-500 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-slate-650 focus:outline-none transition-all duration-200"
                 />
               </div>
 
-              <div className="space-y-1">
-                <label className="block text-[10px] font-mono text-sky-400 uppercase font-bold tracking-wider">
+              <div className="space-y-1.5">
+                <label className="block text-[10px] font-mono text-sky-400 uppercase font-bold tracking-widest pl-1">
                   Academic Discipline / Major
                 </label>
                 <select
                   value={signupDept}
                   onChange={(e) => setSignupDept(e.target.value)}
-                  className="w-full bg-[#070b16] border border-[#1e294b] focus:border-sky-500 rounded-xl px-3 py-2 text-xs text-white focus:outline-none"
+                  className="w-full bg-slate-950/90 border border-slate-805 hover:border-slate-700 focus:border-sky-500 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none cursor-pointer transition-all duration-200"
                 >
                   <option value="CS & Engineering Dept">CS & Engineering Dept</option>
                   <option value="Pre-Med Division">Pre-Med Division</option>
@@ -514,7 +520,7 @@ export default function App() {
 
               <button 
                 type="submit"
-                className="w-full bg-sky-600 hover:bg-sky-500 font-extrabold text-white py-2.5 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow-lg active:scale-[0.98] transition-all cursor-pointer mt-2"
+                className="w-full bg-gradient-to-r from-indigo-500 to-sky-500 hover:from-indigo-400 hover:to-sky-400 font-extrabold text-white py-3 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-lg hover:shadow-indigo-500/10 active:scale-[0.98] transition-all cursor-pointer mt-4"
               >
                 Register Portal ID <ChevronRight className="w-4 h-4" />
               </button>
@@ -611,18 +617,18 @@ export default function App() {
   }
 
   return (
-    <div className="bg-[#070b16] min-h-screen text-[#cbd5e1] font-sans relative mesh-pattern select-none">
+    <div className="bg-[#070b16] min-h-screen text-[#cbd5e1] font-sans relative mesh-pattern">
       
       {/* Top Banner indicating local SQLite / BLE Mesh Signal Strength */}
       <div className="w-full bg-[#0a0f1d] text-slate-300 px-6 py-2.5 flex justify-between items-center sticky top-0 z-[100] border-b border-[#1e294b] shadow-sm text-xs md:text-sm">
         <div className="flex items-center gap-2 font-medium">
           <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="flex items-center gap-1.5 font-bold tracking-tight text-white uppercase text-[10px] font-mono">
+          <span className="flex items-center gap-1.5 font-bold tracking-tight text-white uppercase text-[10px] font-mono select-none">
             <Radio className="w-3.5 h-3.5 text-sky-400" />
             Ad-Hoc Network: {peers.filter(p => p.status === 'active').length} peer nodes online
           </span>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 select-none">
           <div className="flex items-center gap-1 opacity-90 text-[10px] font-mono">
             <Wifi className="w-3.5 h-3.5 text-[#0ea5e9]" />
             <span className="font-bold text-slate-400">SIGNAL FIELD:</span>
@@ -652,7 +658,7 @@ export default function App() {
           {/* Diagnostic status trigger button */}
           <button 
             onClick={handleRunFullDiagnostics}
-            className="p-2 text-slate-400 hover:text-[#0ea5e9] hover:bg-[#151f38] rounded-xl transition-all font-mono text-[10px] uppercase font-bold tracking-wider hidden md:flex items-center gap-1 border border-transparent hover:border-[#1e294d]"
+            className="p-2 text-slate-400 hover:text-[#0ea5e9] hover:bg-[#151f38] rounded-xl transition-all font-mono text-[10px] uppercase font-bold tracking-wider hidden md:flex items-center gap-1 border border-transparent hover:border-[#1e294d] cursor-pointer"
             title="Diagnose Connection"
           >
             <Activity className="w-4 h-4 text-emerald-400" /> check_signal
@@ -660,25 +666,25 @@ export default function App() {
 
           <button 
             onClick={() => setShowSettings(true)}
-            className="p-2 text-slate-400 hover:text-[#0ea5e9] hover:bg-[#151f38] rounded-xl transition-colors border border-transparent hover:border-[#1e294d]"
+            className="p-2 text-slate-400 hover:text-[#0ea5e9] hover:bg-[#151f38] rounded-xl transition-colors border border-transparent hover:border-[#1e294d] cursor-pointer"
             title="Mesh Settings"
           >
             <Settings className="w-5 h-5" />
           </button>
           
-          <div className="w-px h-6 bg-[#16223f] mx-1 hidden md:block" />
+          <div className="w-px h-6 bg-[#16223f] mx-1 hidden md:block select-none" />
 
           {/* User Profile */}
           {activeUser && (
             <div className="flex items-center gap-2">
               <div 
                 style={{ backgroundColor: activeUser.avatar_color || '#0ea5e9' }}
-                className="w-8 h-8 rounded-full flex items-center justify-center text-white font-extrabold text-xs border border-white/10 shadow-md font-mono"
+                className="w-8 h-8 rounded-full flex items-center justify-center text-white font-extrabold text-xs border border-white/10 shadow-md font-mono select-none"
                 title={`${activeUser.username} (${activeUser.academic_unit})`}
               >
                 {activeUser.badge || 'G'}
               </div>
-              <div className="hidden lg:block text-left mr-1">
+              <div className="hidden lg:block text-left mr-1 select-none">
                 <p className="text-xs font-bold text-white leading-none truncate max-w-[100px]">{activeUser.username}</p>
                 <p className="text-[9px] text-[#38bdf8] font-mono leading-none mt-1">{activeUser.phone_or_node}</p>
               </div>
@@ -707,7 +713,7 @@ export default function App() {
           <div className="flex flex-col flex-1 gap-1">
             <button 
               onClick={() => setCurrentTab('home')}
-              className={`w-full flex items-center gap-3 px-5 py-3.5 text-xs font-bold leading-none transition-all border-l-4 ${
+              className={`w-full flex items-center gap-3 px-5 py-3.5 text-xs font-bold leading-none transition-all border-l-4 cursor-pointer ${
                 currentTab === 'home' 
                   ? 'border-l-[#0ea5e9] text-white bg-white/5 font-bold shadow-inner' 
                   : 'border-l-transparent text-slate-400 hover:text-white hover:bg-white/5'
@@ -718,7 +724,7 @@ export default function App() {
 
             <button 
               onClick={() => setCurrentTab('library')}
-              className={`w-full flex items-center gap-3 px-5 py-3.5 text-xs font-bold leading-none transition-all border-l-4 ${
+              className={`w-full flex items-center gap-3 px-5 py-3.5 text-xs font-bold leading-none transition-all border-l-4 cursor-pointer ${
                 currentTab === 'library' 
                   ? 'border-l-[#0ea5e9] text-white bg-white/5 font-bold shadow-inner' 
                   : 'border-l-transparent text-slate-400 hover:text-white hover:bg-white/5'
@@ -729,7 +735,7 @@ export default function App() {
 
             <button 
               onClick={() => setCurrentTab('market')}
-              className={`w-full flex items-center gap-3 px-5 py-3.5 text-xs font-bold leading-none transition-all border-l-4 ${
+              className={`w-full flex items-center gap-3 px-5 py-3.5 text-xs font-bold leading-none transition-all border-l-4 cursor-pointer ${
                 currentTab === 'market' 
                    ? 'border-l-[#0ea5e9] text-white bg-white/5 font-bold shadow-inner' 
                   : 'border-l-transparent text-slate-400 hover:text-white hover:bg-white/5'
@@ -740,7 +746,7 @@ export default function App() {
 
             <button 
               onClick={() => setCurrentTab('meshdrop')}
-              className={`w-full flex items-center gap-3 px-5 py-3.5 text-xs font-bold leading-none transition-all border-l-4 ${
+              className={`w-full flex items-center gap-3 px-5 py-3.5 text-xs font-bold leading-none transition-all border-l-4 cursor-pointer ${
                 currentTab === 'meshdrop' 
                   ? 'border-l-[#0ea5e9] text-white bg-white/5 font-bold shadow-inner' 
                   : 'border-l-transparent text-slate-400 hover:text-white hover:bg-white/5'
@@ -751,7 +757,7 @@ export default function App() {
 
             <button 
               onClick={() => setCurrentTab('syncnote')}
-              className={`w-full flex items-center gap-3 px-5 py-3.5 text-xs font-bold leading-none transition-all border-l-4 ${
+              className={`w-full flex items-center gap-3 px-5 py-3.5 text-xs font-bold leading-none transition-all border-l-4 cursor-pointer ${
                 currentTab === 'syncnote' 
                   ? 'border-l-[#0ea5e9] text-white bg-white/5 font-bold shadow-inner' 
                   : 'border-l-transparent text-slate-400 hover:text-white hover:bg-white/5'
@@ -762,7 +768,7 @@ export default function App() {
 
             <button 
               onClick={() => setCurrentTab('chat')}
-              className={`w-full flex items-center gap-3 px-5 py-3.5 text-xs font-bold leading-none transition-all border-l-4 ${
+              className={`w-full flex items-center gap-3 px-5 py-3.5 text-xs font-bold leading-none transition-all border-l-4 cursor-pointer ${
                 currentTab === 'chat' 
                   ? 'border-l-[#0ea5e9] text-white bg-white/5 font-bold shadow-inner' 
                   : 'border-l-transparent text-slate-400 hover:text-white hover:bg-white/5'
@@ -773,7 +779,7 @@ export default function App() {
 
             <button 
               onClick={() => setCurrentTab('peers')}
-              className={`w-full flex items-center gap-3 px-5 py-3.5 text-xs font-bold leading-none transition-all border-l-4 ${
+              className={`w-full flex items-center gap-3 px-5 py-3.5 text-xs font-bold leading-none transition-all border-l-4 cursor-pointer ${
                 currentTab === 'peers' 
                   ? 'border-l-[#0ea5e9] text-white bg-white/5 font-bold shadow-inner' 
                   : 'border-l-transparent text-slate-400 hover:text-white hover:bg-white/5'
@@ -796,25 +802,30 @@ export default function App() {
           
           {/* Active Tab rendering */}
           {currentTab === 'home' && (
-            <div className="space-y-8 animate-fade-in select-none">
+            <div className="space-y-8 animate-fade-in text-slate-200">
               
               {/* Ready to sync Header Jumbotron */}
               <section>
-                <div className="bg-gradient-to-br from-[#0ea5e9] to-[#5046e6] rounded-3xl p-8 text-white shadow-xl relative overflow-hidden border border-[#2563eb]/20">
-                  <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-20 -mt-20 blur-3xl pointer-events-none" />
+                <div className="bg-gradient-to-br from-[#0a0f1d] via-[#0d162c] to-[#040713] rounded-3xl p-8 text-white shadow-2xl relative overflow-hidden border border-sky-950/80 cyber-glow">
+                  {/* Glowing neon background effects */}
+                  <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-bl from-sky-500/10 via-indigo-600/5 to-transparent rounded-full blur-3xl pointer-events-none" />
+                  <div className="absolute -bottom-10 -left-10 w-44 h-44 bg-pink-500/5 rounded-full blur-3xl pointer-events-none" />
+                  
                   <div className="relative z-10 max-w-md">
-                    <div className="bg-white/10 text-white border border-white/20 uppercase tracking-widest text-[9px] font-mono font-bold px-2.5 py-1 rounded-md inline-flex items-center gap-1.5 mb-4 mb-2.5">
-                      <Radio className="w-3 h-3 text-[#38bdf8] animate-pulse" /> zero internet required
+                    <div className="bg-slate-950/60 text-[#38bdf8] border border-sky-500/30 uppercase tracking-widest text-[9px] font-mono font-bold px-3 py-1.5 rounded-xl inline-flex items-center gap-2 mb-4.5 shadow-sm">
+                      <Radio className="w-3.5 h-3.5 text-sky-400 animate-pulse" /> Zero Internet Connection Required
                     </div>
-                    <h2 className="font-display font-extrabold text-2xl text-white mb-2">Ready to study offline?</h2>
-                    <p className="text-sky-100 text-sm mb-6 leading-relaxed font-sans">
+                    <h2 className="font-display font-black text-2xl text-white tracking-tight mb-2.5">
+                      Ready to study offline?
+                    </h2>
+                    <p className="text-slate-350 text-xs leading-relaxed font-medium mb-6">
                       Discover and download study guides, slides, and class notes shared by classmates sitting in the same classroom, all without using any mobile data.
                     </p>
                     <button 
                       onClick={() => setCurrentTab('market')}
-                      className="bg-white hover:bg-sky-50 text-[#0ea5e9] font-extrabold px-6 py-3.5 rounded-xl flex items-center gap-2.5 transition-all active:scale-95 shadow-md text-xs uppercase tracking-wider cursor-pointer"
+                      className="bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-505 text-white font-extrabold px-6 py-3.5 rounded-xl flex items-center gap-2.5 transition-all hover:scale-[1.02] active:scale-95 shadow-lg shadow-sky-505/10 text-xs uppercase tracking-wider cursor-pointer"
                     >
-                      <Compass className="w-4 h-4 text-[#0ea5e9] fill-sky-100" /> Discover Nearby
+                      <Compass className="w-4 h-4 text-sky-100 fill-sky-200" /> Discover Nearby
                     </button>
                   </div>
                 </div>
@@ -824,25 +835,25 @@ export default function App() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 
                 {/* School course learning progress item */}
-                <div className="bg-[#0a0f1d] p-6 rounded-2xl border border-[#1e294b] hover:border-[#38bdf8] transition-colors shadow-lg flex flex-col justify-between">
+                <div className="bg-[#0b1120] p-6 rounded-2xl border border-slate-800 hover:border-sky-500/40 transition-all duration-300 shadow-xl flex flex-col justify-between cyber-glow">
                   <div className="flex justify-between items-start mb-6">
                     <div>
-                      <span className="text-[10px] font-bold text-sky-400 tracking-widest uppercase font-mono">Current Progress</span>
-                      <h3 className="font-display font-extrabold text-lg text-white tracking-tight mt-1">Distributed Systems</h3>
+                      <span className="text-[10px] font-bold text-sky-400 tracking-widest uppercase font-mono pl-0.5">Academic Track Progress</span>
+                      <h3 className="font-display font-extrabold text-lg text-white tracking-tight mt-1.5">Distributed Systems</h3>
                     </div>
-                    <div className="bg-sky-950/40 border border-[#1e294b] p-2.5 rounded-xl text-sky-400">
-                      <School className="w-5 h-5" />
+                    <div className="bg-slate-950/80 border border-slate-800/80 p-2.5 rounded-xl text-sky-450 shadow-inner">
+                      <School className="w-5 h-5 animate-pulse" />
                     </div>
                   </div>
 
                   <div>
-                    <div className="flex justify-between mb-2">
-                      <span className="text-xs font-semibold text-slate-400">{unitProgress}% Complete</span>
-                      <span className="text-xs font-extrabold text-[#38bdf8]">{completedUnits}/16 units</span>
+                    <div className="flex justify-between mb-2 pl-0.5">
+                      <span className="text-xs font-bold text-slate-450">{unitProgress}% Complete</span>
+                      <span className="text-xs font-mono font-extrabold text-[#38bdf8]">{completedUnits}/16 units</span>
                     </div>
-                    <div className="w-full h-3 bg-slate-900 rounded-full overflow-hidden relative border border-[#1e294b]">
+                    <div className="w-full h-3 bg-slate-950 rounded-full overflow-hidden relative border border-slate-800 p-0.5">
                       <motion.div 
-                        className="h-full bg-gradient-to-r from-sky-400 to-[#5046e6]"
+                        className="h-full bg-gradient-to-r from-sky-400 to-[#5046e6] rounded-full"
                         initial={{ width: 0 }}
                         animate={{ width: `${unitProgress}%` }}
                         transition={{ duration: 0.8 }}
@@ -850,7 +861,7 @@ export default function App() {
                     </div>
                     <button 
                       onClick={handleIncreaseUnit}
-                      className="mt-4 w-full bg-[#11192e] hover:bg-[#16223f] text-sky-400 border border-[#1e294b] hover:border-sky-500 font-extrabold py-2 text-xs rounded-xl flex items-center justify-center gap-1 transition-all"
+                      className="mt-5 w-full bg-slate-950/80 hover:bg-slate-900 text-sky-400 hover:text-sky-300 border border-slate-800 hover:border-sky-500/50 font-extrabold py-3 text-xs rounded-xl flex items-center justify-center gap-1.5 transition-all shadow-sm"
                     >
                       Master Syllabus Unit
                     </button>
@@ -858,33 +869,36 @@ export default function App() {
                 </div>
 
                 {/* Recent transfers list panel */}
-                <div className="bg-[#0a0f1d] p-6 rounded-2xl border border-[#1e294b] hover:border-[#38bdf8] transition-colors shadow-lg flex flex-col justify-between">
+                <div className="bg-[#0b1120] p-6 rounded-2xl border border-slate-800 hover:border-sky-500/40 transition-all duration-300 shadow-xl flex flex-col justify-between cyber-glow">
                   <div>
                     <div className="flex justify-between items-start mb-4">
-                      <h3 className="font-display font-bold text-base text-white">Recent Transfers</h3>
-                      <span className="text-[10px] bg-sky-950/40 text-[#38bdf8] border border-sky-800 px-2.5 py-0.5 rounded-full font-bold uppercase select-none tracking-wide font-mono">Live</span>
+                      <h3 className="font-display font-extrabold text-base text-white tracking-tight">Recent Transfers</h3>
+                      <span className="text-[10px] bg-slate-950/80 text-[#38bdf8] border border-sky-800/40 px-3 py-1 rounded-full font-bold uppercase select-none tracking-widest font-mono shadow-sm">
+                        <span className="w-1.5 h-1.5 rounded-full bg-sky-450 inline-block mr-1.5 animate-pulse" />
+                        Live
+                      </span>
                     </div>
 
                     <div className="space-y-4">
                       {/* Consensus static complete log */}
-                      <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-lg bg-[#0e1f2e] border border-[#1e294b] flex items-center justify-center flex-shrink-0">
-                          <FileCheck2 className="w-5 h-5 text-emerald-400" />
+                      <div className="flex items-center gap-3 p-2 bg-slate-950/40 rounded-xl border border-slate-900/50">
+                        <div className="w-9 h-9 rounded-lg bg-teal-950/30 border border-teal-900/40 flex items-center justify-center flex-shrink-0">
+                          <FileCheck2 className="w-5 h-5 text-emerald-450" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-xs font-bold text-white truncate select-all font-mono">p2p_history_notes.pdf</p>
+                          <p className="text-xs font-bold text-white truncate font-mono">p2p_history_notes.pdf</p>
                           <p className="text-[10px] text-slate-400 font-medium">Completed • 4.2 MB • classroom sharing</p>
                         </div>
                         <CheckCircle className="w-4 h-4 text-emerald-400 justify-end flex-shrink-0" />
                       </div>
 
                       {/* Mesh topology real-time synchronized percentage progress */}
-                      <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-lg bg-[#0e1f2e] border border-[#1e294b] flex items-center justify-center flex-shrink-0">
+                      <div className="flex items-center gap-3 p-2 bg-slate-950/40 rounded-xl border border-slate-900/50">
+                        <div className="w-9 h-9 rounded-lg bg-sky-950/30 border border-sky-900/40 flex items-center justify-center flex-shrink-0">
                           <Radio className="w-4 h-4 text-sky-400 animate-pulse" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-xs font-bold text-white truncate select-all font-mono">geometry_tutorial.mp4</p>
+                          <p className="text-xs font-bold text-white truncate font-mono">geometry_tutorial.mp4</p>
                           <p className="text-[10px] text-slate-400 font-medium leading-none mt-1">
                             {dashboardTopology.recentConsensusProgress}% • {dashboardTopology.recentConsensusStatus}
                           </p>
@@ -901,7 +915,7 @@ export default function App() {
 
                   <button 
                     onClick={handleOfflineDirectOptimize}
-                    className="mt-4 text-xs font-bold text-[#38bdf8] flex items-center gap-1 hover:translate-x-1 hover:text-sky-400 transition-all select-none self-start"
+                    className="mt-4 text-xs font-bold text-[#38bdf8] flex items-center gap-1 hover:translate-x-1.5 hover:text-sky-300 transition-all select-none self-start font-mono"
                   >
                     View full history <ChevronRight className="w-3.5 h-3.5 text-sky-400" />
                   </button>

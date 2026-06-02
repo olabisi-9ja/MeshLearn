@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Wifi, Radio, AlertTriangle, ShieldAlert, PlusCircle, CheckCircle2, RefreshCw, XCircle, Settings } from 'lucide-react';
 import { motion } from 'motion/react';
 import { PeerNode } from '../types';
+import PeerMap from './PeerMap';
 
 interface PeersTabProps {
   peers: PeerNode[];
@@ -49,18 +50,21 @@ export default function PeersTab({
       {/* Topology Intro Header */}
       <section className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold font-display text-slate-800">Classmates Sharing Nearby</h2>
-          <p className="text-sm text-slate-500">See who is active nearby and sharing study resources currently.</p>
+          <h2 className="text-xl font-bold font-display text-slate-802 text-white">Classmates Sharing Nearby</h2>
+          <p className="text-sm text-slate-400">See who is active nearby and sharing study resources currently.</p>
         </div>
 
         <button 
           onClick={() => setIsAdding(!isAdding)}
-          className="bg-[#0ea5e9] hover:bg-[#0284c7] text-white font-bold py-2.5 px-4 rounded-xl text-xs flex items-center justify-center gap-1.5 select-none active:scale-95 transition-all shadow-sm uppercase tracking-wide cursor-pointer"
+          className="bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-505 text-white font-black py-3 px-5 rounded-xl text-xs flex items-center justify-center gap-1.5 select-none active:scale-95 transition-all shadow-md uppercase tracking-wider cursor-pointer"
         >
           <PlusCircle className="w-4 h-4" />
           Add Classmate Device
         </button>
       </section>
+
+      {/* Visual interactive ad-hoc signal map with dynamic routing links */}
+      <PeerMap peers={peers} />
 
       {/* Slideout Add form */}
       {isAdding && (

@@ -480,15 +480,15 @@ export default function ChatTab({ peers, showToast }: ChatTabProps) {
   );
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-12 gap-5 h-[620px] bg-[#070b16] rounded-3xl border border-[#1e294b] overflow-hidden shadow-2xl relative">
+    <div className="grid grid-cols-1 md:grid-cols-12 h-[640px] bg-[#040815] rounded-3xl border border-slate-800/85 overflow-hidden shadow-2xl relative">
       
       {/* LEFT COLUMN: Telegram Threads List */}
-      <div className={`md:col-span-4 flex flex-col bg-[#0b101f] border-r border-[#19233f] h-full ${
+      <div className={`md:col-span-4 flex flex-col bg-[#080d1a] border-r border-slate-900 h-full ${
         mobileView === 'chat' ? 'hidden md:flex' : 'flex'
       }`}>
         
         {/* Telegram Top Profile Bar */}
-        <div className="p-4 bg-[#0e162c] border-b border-[#19233f] flex items-center justify-between">
+        <div className="p-4 bg-slate-950 border-b border-slate-900 flex items-center justify-between shadow-sm">
           <div className="flex items-center gap-2.5">
             <div 
               style={{ backgroundColor: activeUser?.avatar_color || '#0ea5e9' }}
@@ -498,30 +498,30 @@ export default function ChatTab({ peers, showToast }: ChatTabProps) {
               {activeUser?.badge || 'G'}
             </div>
             <div className="min-w-0">
-              <div className="flex items-center gap-1">
-                <p className="text-xs font-bold text-white truncate max-w-[120px]">{activeUser?.username || 'Guest Student'}</p>
-                <div className={`w-1.5 h-1.5 rounded-full ${activeUser ? 'bg-emerald-400' : 'bg-amber-400'} animate-pulse ml-0.5`} />
+              <div className="flex items-center gap-1.5">
+                <p className="text-xs font-bold text-white truncate max-w-[110px]">{activeUser?.username || 'Guest Student'}</p>
+                <div className={`w-1.5 h-1.5 rounded-full ${activeUser ? 'bg-emerald-450' : 'bg-amber-400'} animate-pulse`} />
               </div>
-              <p className="text-[9px] text-slate-400 truncate font-mono max-w-[140px]" title="Department units">
+              <p className="text-[9px] text-slate-400 font-medium truncate font-mono max-w-[130px]" title="Department units">
                 {activeUser?.academic_unit || activeUser?.phone_or_node || 'LMS - Guest Session'}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
             <button 
               onClick={() => {
                 setAuthMode('login');
                 setShowRegModal(true);
               }}
-              className="p-1 px-2 text-[9px] text-slate-200 hover:text-white bg-[#1a233f] border border-[#2d3a63] hover:border-sky-500 rounded-lg transition-all font-bold uppercase tracking-wider cursor-pointer"
+              className="px-2.5 py-1.5 text-[8px] text-slate-300 hover:text-white bg-slate-905 border border-slate-800 hover:border-sky-500/50 rounded-lg transition-all font-bold uppercase tracking-widest cursor-pointer shadow-inner"
               title="Access LMS Student Authorization Gateway"
             >
               {activeUser ? 'LMS Account' : 'Sign In'}
             </button>
             <button 
               onClick={() => setShowGroupCreator(true)}
-              className="p-1.5 text-slate-300 hover:text-white bg-sky-600 hover:bg-sky-500 rounded-xl transition-all shadow-md cursor-pointer"
+              className="p-2 text-slate-300 hover:text-white bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-505 rounded-xl transition-all shadow-md cursor-pointer"
               title="Create Course Circle"
             >
               <Plus className="w-4 h-4" />
@@ -530,23 +530,23 @@ export default function ChatTab({ peers, showToast }: ChatTabProps) {
         </div>
 
         {/* Search Channel Thread Box */}
-        <div className="p-3 bg-[#080d19]/60">
+        <div className="p-3 bg-slate-950/40 border-b border-slate-900/60">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
             <input 
               type="text"
               placeholder="Search chapters & circles..."
               value={threadSearch}
               onChange={(e) => setThreadSearch(e.target.value)}
-              className="w-full bg-[#070a14] border border-[#1e294b] focus:border-sky-500 rounded-xl py-2 pl-9 pr-3 text-xs text-white placeholder-slate-500 focus:outline-none transition-all font-sans"
+              className="w-full bg-slate-950/90 border border-slate-850 focus:border-sky-500 rounded-xl py-2.5 pl-10 pr-4 text-xs text-white placeholder-slate-600 focus:outline-none transition-all font-sans font-medium"
             />
           </div>
         </div>
 
         {/* Threads List viewport scrolling */}
-        <div className="flex-1 overflow-y-auto divide-y divide-[#1e294b]/30">
+        <div className="flex-1 overflow-y-auto divide-y divide-slate-900/40">
           {filteredGroups.length === 0 ? (
-            <div className="p-8 text-center text-xs text-slate-500">
+            <div className="p-8 text-center text-xs text-slate-500 font-bold">
               No chat circles matched.
             </div>
           ) : (
@@ -556,14 +556,14 @@ export default function ChatTab({ peers, showToast }: ChatTabProps) {
                 <div 
                   key={group.id}
                   onClick={() => handleSelectGroup(group.id)}
-                  className={`p-4 flex items-start gap-3 cursor-pointer transition-all ${
+                  className={`p-4 flex items-start gap-3.5 cursor-pointer transition-all duration-200 ${
                     isActive 
-                      ? 'bg-[#15203d] border-l-4 border-sky-500 text-white' 
-                      : 'hover:bg-[#0e162a]/50 text-slate-300'
+                      ? 'bg-slate-950 border-l-4 border-sky-550 text-white' 
+                      : 'hover:bg-slate-950/40 text-slate-350'
                   }`}
                 >
-                  <div className={`w-10 h-10 rounded-2xl flex items-center justify-center text-sky-400 border select-none ${
-                    isActive ? 'bg-sky-950/80 border-sky-400/50' : 'bg-slate-900 border-[#1c2847]'
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-sky-400 border select-none ${
+                    isActive ? 'bg-sky-950/60 border-sky-400/30' : 'bg-slate-950 border-slate-800'
                   }`}>
                     {group.icon === 'BookOpen' ? (
                       <Users className="w-5 h-5" />
@@ -576,20 +576,20 @@ export default function ChatTab({ peers, showToast }: ChatTabProps) {
 
                   <div className="flex-1 min-w-0">
                     <div className="flex justify-between items-center mb-0.5">
-                      <h4 className="text-xs font-bold truncate pr-2">{group.name}</h4>
+                      <h4 className="text-xs font-bold truncate pr-2 text-white">{group.name}</h4>
                       <span className="text-[9px] font-mono opacity-60">
                         {group.id === 'g-classroom' ? 'Online' : 'Local'}
                       </span>
                     </div>
-                    <p className="text-[10px] text-slate-400 line-clamp-1 leading-relaxed">
+                    <p className="text-[10.5px] text-slate-400 line-clamp-1 leading-relaxed">
                       {group.description}
                     </p>
-                    <div className="flex gap-2 items-center mt-1 text-[8px] font-mono text-slate-500 uppercase font-bold">
-                      <span className="flex items-center gap-0.5">
-                        <Users className="w-2.5 h-2.5" /> {group.peer_count} seats
+                    <div className="flex gap-2 items-center mt-1 text-[8px] font-mono text-slate-550 uppercase font-black tracking-wider">
+                      <span className="flex items-center gap-1">
+                        <Users className="w-2.5 h-2.5 text-sky-450" /> {group.peer_count} seats
                       </span>
                       {group.is_custom && (
-                        <span className="text-emerald-400 bg-emerald-950/50 px-1 border border-emerald-900/40 rounded">
+                        <span className="text-emerald-400 bg-emerald-950/40 px-1.5 py-0.5 border border-emerald-900/30 rounded font-bold">
                           Created in SQLite
                         </span>
                       )}
@@ -602,48 +602,48 @@ export default function ChatTab({ peers, showToast }: ChatTabProps) {
         </div>
 
         {/* SQLite status block */}
-        <div className="p-3 bg-[#0d1425] border-t border-[#19233f] flex items-center justify-between text-[10px] font-mono">
-          <div className="flex items-center gap-1 text-slate-400 select-none">
-            <Database className="w-3.5 h-3.5 text-sky-400" />
-            <span>SQLite Active Codec</span>
+        <div className="p-3 bg-slate-950 border-t border-slate-900 flex items-center justify-between text-[10px] font-mono shadow-inner select-none">
+          <div className="flex items-center gap-1.5 text-slate-400">
+            <Database className="w-4 h-4 text-sky-400" />
+            <span className="font-bold">SQLite Node Broker</span>
           </div>
           <button 
             onClick={() => setShowTerminal(!showTerminal)}
-            className="flex items-center gap-1.5 px-2.5 py-1 text-[9px] font-black text-white hover:text-sky-400 bg-slate-900 border border-[#1e294b] rounded-lg transition-all cursor-pointer select-none"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-[9px] font-black text-white hover:text-sky-450 bg-slate-900 hover:bg-slate-850 border border-slate-800 hover:border-sky-500/40 rounded-xl transition-all cursor-pointer"
           >
-            <Terminal className="w-3 h-3 text-emerald-400" />
+            <Terminal className="w-3.5 h-3.5 text-emerald-450 animate-pulse" />
             <span>SQL TERMINAL</span>
           </button>
         </div>
       </div>
 
       {/* RIGHT COLUMN: Telegram Active Chat panel */}
-      <div className={`md:col-span-8 flex flex-col h-full bg-[#070b16] select-text relative ${
+      <div className={`md:col-span-8 flex flex-col h-full bg-[#050915] select-text relative ${
         mobileView === 'list' ? 'hidden md:flex' : 'flex'
       }`}>
         
         {/* Chat Thread Header bar */}
-        <div className="p-4 bg-[#0e162c] border-b border-[#19233f] flex items-center justify-between">
+        <div className="p-4 bg-slate-950 border-b border-slate-900 flex items-center justify-between shadow-sm select-none">
           <div className="flex items-center gap-3">
             <button 
               onClick={() => setMobileView('list')}
-              className="p-1 text-slate-400 hover:text-white md:hidden mr-1 cursor-pointer"
+              className="p-1 text-slate-405 hover:text-white md:hidden mr-1 cursor-pointer"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
 
-            <div className="w-10 h-10 rounded-2xl bg-sky-950/40 text-sky-400 border border-sky-900/50 flex items-center justify-center font-mono font-bold">
+            <div className="w-10 h-10 rounded-xl bg-slate-900 text-sky-400 border border-slate-800 flex items-center justify-center font-mono font-bold">
               {activeGroup?.name.substring(0, 1).toUpperCase() || 'C'}
             </div>
 
             <div>
-              <div className="flex items-center gap-1.5">
-                <h3 className="font-display font-extrabold text-sm text-white">{activeGroup?.name || 'Loading Circle'}</h3>
-                <span className="flex items-center gap-0.5 text-[8px] bg-sky-950 text-sky-400 border border-sky-900 font-bold px-1.5 py-0.5 rounded-full select-none font-mono">
+              <div className="flex items-center gap-2">
+                <h3 className="font-display font-extrabold text-sm text-white tracking-tight">{activeGroup?.name || 'Loading Circle'}</h3>
+                <span className="flex items-center gap-1 text-[8px] bg-sky-950/80 text-sky-400 border border-sky-900/40 font-bold px-2 py-0.5 rounded-full font-mono">
                   <Radio className="w-2.5 h-2.5 animate-pulse text-sky-400" /> RELAY_OK
                 </span>
               </div>
-              <p className="text-[10px] text-slate-400 truncate mt-0.5 font-mono max-w-[280px] md:max-w-none">
+              <p className="text-[10px] text-slate-400 truncate mt-0.5 font-medium max-w-[240px] md:max-w-none">
                 {activeGroup?.description || 'Loading descriptive details...'}
               </p>
             </div>
@@ -777,7 +777,7 @@ export default function ChatTab({ peers, showToast }: ChatTabProps) {
         </div>
 
         {/* Telegram Chat Input Bar */}
-        <div className="border-t border-[#1e294b] p-3 bg-[#0d1425]">
+        <div className="border-t border-slate-900 p-4.5 bg-slate-950/95 shadow-lg relative z-10">
           <AnimatePresence mode="wait">
             {isRecording ? (
               <motion.div 
@@ -785,12 +785,12 @@ export default function ChatTab({ peers, showToast }: ChatTabProps) {
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -15 }}
-                className="flex items-center justify-between bg-red-950/40 border border-red-900/50 rounded-2xl p-3 text-red-200 text-xs"
+                className="flex items-center justify-between bg-red-950/20 border border-red-900/40 rounded-2xl p-3 text-red-200 text-xs shadow-inner"
               >
-                <div className="flex items-center gap-2 font-mono">
-                  <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
-                  <span className="font-extrabold uppercase">Emitting Audio Stream:</span>
-                  <span className="font-black text-xs bg-red-600 text-white px-2 py-0.5 rounded">0:{recordingSeconds < 10 ? '0' + recordingSeconds : recordingSeconds}</span>
+                <div className="flex items-center gap-2.5 font-mono">
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse" />
+                  <span className="font-extrabold uppercase text-[10px] tracking-wider text-red-400">Emitting Audio Stream:</span>
+                  <span className="font-black text-xs bg-red-650 text-white px-2.5 py-1 rounded-xl">0:{recordingSeconds < 10 ? '0' + recordingSeconds : recordingSeconds}</span>
                 </div>
 
                 <div className="flex-1 max-w-[130px] mx-4">
@@ -800,15 +800,15 @@ export default function ChatTab({ peers, showToast }: ChatTabProps) {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={cancelVoiceRecording}
-                    className="bg-slate-800 hover:bg-slate-700 text-slate-350 px-3 py-1.5 rounded-xl text-[10px] font-bold cursor-pointer transition-all"
+                    className="bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-800 px-3 py-1.5 rounded-xl text-[10px] font-bold cursor-pointer transition-all"
                   >
                     Discard
                   </button>
                   <button
                     onClick={stopAndSubmitVoice}
-                    className="bg-red-600 hover:bg-red-500 text-white font-extrabold px-4 py-1.5 rounded-xl flex items-center gap-1 text-[10px] cursor-pointer transition-all shadow-md shadow-red-500/20"
+                    className="bg-red-650 hover:bg-red-500 text-white font-extrabold px-4.5 py-1.5 rounded-xl flex items-center gap-1.5 text-[10px] cursor-pointer transition-all shadow-md shadow-red-500/10"
                   >
-                    <Send className="w-3 h-3 fill-current" /> Emit Stream
+                    <Send className="w-3.5 h-3.5 fill-current" /> Emit Stream
                   </button>
                 </div>
               </motion.div>
@@ -822,7 +822,7 @@ export default function ChatTab({ peers, showToast }: ChatTabProps) {
               >
                 <button 
                   onClick={() => showToast("Select lecture material from offline storage file manager to attach to classroom stream.", "info")}
-                  className="p-2.5 text-slate-400 hover:text-sky-400 hover:bg-[#15203d] rounded-xl transition-all cursor-pointer"
+                  className="p-2.5 text-slate-400 hover:text-sky-400 hover:bg-[#15203d]/30 rounded-xl transition-all cursor-pointer"
                   title="Attach Study Pack File"
                 >
                   <Paperclip className="w-4 h-4" />
@@ -830,7 +830,7 @@ export default function ChatTab({ peers, showToast }: ChatTabProps) {
 
                 <button 
                   onClick={() => showToast("Simulated offline graphic-text emoji packet loaded.", "info")}
-                  className="p-2.5 text-slate-400 hover:text-sky-400 hover:bg-[#15203d] rounded-xl transition-all cursor-pointer"
+                  className="p-2.5 text-slate-400 hover:text-sky-400 hover:bg-[#15203d]/30 rounded-xl transition-all cursor-pointer"
                   title="Emoji"
                 >
                   <Smile className="w-4 h-4" />
@@ -841,15 +841,15 @@ export default function ChatTab({ peers, showToast }: ChatTabProps) {
                   value={inputVal}
                   onChange={(e) => setInputVal(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSendText()}
-                  placeholder={`Send direct mesh data to ${activeGroup?.name}...`}
-                  className="flex-1 bg-[#070b16] border border-[#1e294b] rounded-xl px-4 py-2.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500/20 transition-all font-sans font-medium"
+                  placeholder={`Send direct mesh data to ${activeGroup?.name || 'circle'}...`}
+                  className="flex-1 bg-slate-955 border border-slate-850 rounded-xl px-4 py-3 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-sky-505 focus:ring-1 focus:ring-sky-500/20 transition-all font-sans font-semibold shadow-inner"
                 />
 
                 {inputVal.trim() === '' ? (
                   <button
                     type="button"
                     onClick={startVoiceRecording}
-                    className="bg-[#15203d] hover:bg-[#1c2b53] text-slate-350 hover:text-sky-400 border border-[#2d3a63] p-2.5 rounded-xl transition-all active:scale-95 flex items-center justify-center shrink-0 cursor-pointer"
+                    className="bg-slate-900 hover:bg-slate-850 text-slate-300 hover:text-sky-450 border border-slate-805 p-3 rounded-xl transition-all active:scale-95 flex items-center justify-center shrink-0 cursor-pointer shadow-sm"
                     title="Hold to Stream Offline Voice Note"
                   >
                     <Mic className="w-4 h-4" />
@@ -858,7 +858,7 @@ export default function ChatTab({ peers, showToast }: ChatTabProps) {
                   <button
                     type="button"
                     onClick={handleSendText}
-                    className="bg-sky-600 hover:bg-sky-500 text-white p-2.5 rounded-xl transition-all active:scale-95 shadow-md shadow-sky-500/10 shrink-0 flex items-center justify-center cursor-pointer"
+                    className="bg-sky-650 hover:bg-sky-550 text-white p-3 rounded-xl transition-all active:scale-95 shadow-lg shadow-sky-500/15 shrink-0 flex items-center justify-center cursor-pointer"
                   >
                     <Send className="w-4 h-4 fill-current animate-pulse" />
                   </button>

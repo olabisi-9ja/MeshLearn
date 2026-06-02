@@ -214,7 +214,7 @@ export default function MeshDropTab({
         <div className="flex flex-col sm:flex-row gap-3">
           <button 
             onClick={() => setShowConfig(!showConfig)}
-            className="bg-[#0ea5e9] hover:bg-[#0284c7] text-white px-6 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-md active:scale-95 text-xs uppercase tracking-wider select-none flex-1 md:flex-none"
+            className="bg-[#0ea5e9] hover:bg-[#0284c7] text-white px-6 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-all shadow-md active:scale-95 text-xs uppercase tracking-wider select-none flex-1 md:flex-none cursor-pointer"
           >
             <Send className="w-4 h-4 fill-white text-[#0ea5e9]" />
             Send Study File
@@ -223,7 +223,7 @@ export default function MeshDropTab({
           <button 
             onClick={handleBroadcastBeacon}
             disabled={isBroadcasting}
-            className="bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 px-6 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-85 text-xs uppercase tracking-wider select-none flex-1 md:flex-none"
+            className="bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 px-6 py-3.5 rounded-xl font-bold flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-85 text-xs uppercase tracking-wider select-none flex-1 md:flex-none cursor-pointer"
           >
             <Radio className={`w-4 h-4 text-[#0ea5e9] ${isBroadcasting ? 'animate-bounce' : ''}`} />
             {isBroadcasting ? 'Searching...' : 'Search for Classmates'}
@@ -246,7 +246,7 @@ export default function MeshDropTab({
                 <button 
                   type="button" 
                   onClick={() => setShowConfig(false)}
-                  className="text-xs text-slate-400 hover:text-slate-600 font-bold"
+                  className="text-xs text-slate-400 hover:text-slate-600 font-bold cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -270,7 +270,7 @@ export default function MeshDropTab({
                   <select 
                     value={customFileType}
                     onChange={(e) => setCustomFileType(e.target.value)}
-                    className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-blue-600 focus:ring-1"
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-blue-600 focus:ring-1 cursor-pointer"
                   >
                     <option value="PDF">PDF Document</option>
                     <option value="VIDEO">MP4 Video</option>
@@ -295,7 +295,7 @@ export default function MeshDropTab({
 
               <button 
                 type="submit"
-                className="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white font-bold py-2 text-xs rounded-xl transition-all uppercase"
+                className="w-full bg-[#0ea5e9] hover:bg-[#0284c7] text-white font-bold py-2 text-xs rounded-xl transition-all uppercase cursor-pointer"
               >
                 Add to Sharing List
               </button>
