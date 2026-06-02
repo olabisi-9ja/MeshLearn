@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Send, Radio, UploadCloud, FileUp, Terminal, Play, CheckCircle, Info, Disc, ServerCrash } from 'lucide-react';
+import { Send, Radio, UploadCloud, FileUp, Terminal, Play, CheckCircle, Info, Disc, ServerCrash, Layers } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import ActiveTransfers from './ActiveTransfers';
 import NetworkMetrics from './NetworkMetrics';
@@ -10,15 +10,79 @@ interface MeshDropTabProps {
   onCancelTransfer: (id: string) => void;
   onUploadFile: (name: string, type: string, size: string) => void;
   peers: PeerNode[];
+  showToast?: (msg: string, type: 'success' | 'info' | 'warn') => void;
 }
 
 export default function MeshDropTab({
   transfers,
   onCancelTransfer,
   onUploadFile,
-  peers
+  peers,
+  showToast
 }: MeshDropTabProps) {
   const [dragActive, setDragActive] = useState(false);
+  
+  // Segment data states for thesis specification bitfield monitoring
+  const [chunks, setChunks] = useState([
+    { index: 0, complete: true, loading: false },
+    { index: 1, complete: true, loading: false },
+    { index: 2, complete: true, loading: false },
+    { index: 3, complete: false, loading: false },
+    { index: 4, complete: false, loading: false }
+  ]);
+  const [isSimulatingChunks, setIsSimulatingChunks] = useState(false);
+
+  // Computes progress
+  const chunkCount = chunks.filter(c => c.complete).length;
+  const chunkProgress = Math.round((chunkCount / chunks.length) * 100);
+
+  const handleSimulateChunkDownload = () => {
+    if (isSimulatingChunks) return;
+    setIsSimulatingChunks(true);
+    
+    setBroadcastLogs(prev => [
+      ...prev,
+      'MeshDrop: Contacted peer Sarah Miller sitting 3 seats away',
+      'Bitfield Handshaking: Client sent logical array [1, 1, 1, 0, 0]',
+      'Bitfield Handshaking: Remote responded with array [1, 1, 1, 1, 1]',
+      'P2P Sync: Identified disjoint elements [3, 4] for pipeline fetching'
+    ]);
+
+    // Animate Chunk 3 loading
+    setChunks(prev => {
+      const copy = [...prev];
+      copy[3].loading = true;
+      return copy;
+    });
+
+    setTimeout(() => {
+      setChunks(prev => {
+        const copy = [...prev];
+        copy[3].loading = false;
+        copy[3].complete = true;
+        copy[4].loading = true; // start next
+        return copy;
+      });
+      setBroadcastLogs(prev => [...prev, 'Completed: Pulled segmented 256KB block #3 over close Wi-Fi Direct!']);
+    }, 2000);
+
+    setTimeout(() => {
+      setChunks(prev => {
+        const copy = [...prev];
+        copy[4].loading = false;
+        copy[4].complete = true;
+        return copy;
+      });
+      setBroadcastLogs(prev => [
+        ...prev,
+        'Completed: Pulled segmented 256KB block #4 over close Wi-Fi Direct!',
+        'MeshDrop Success: File distributed_consensus_core.pdf compiled successfully! CRC32 checksum matches: 0x9D8C'
+      ]);
+      setIsSimulatingChunks(false);
+      if (showToast) showToast('P2P segmented file download complete!', 'success');
+    }, 4000);
+  };
+
   const [broadcastLogs, setBroadcastLogs] = useState<string[]>([
     'System: Sharing interface initialized on your device',
     'System: Bluetooth sharing activated under My Device',
@@ -282,6 +346,76 @@ export default function MeshDropTab({
         transfers={transfers}
         onCancelTransfer={onCancelTransfer}
       />
+
+      {/* MeshDrop Segmented Chunk Transfer Bitfield Visualizer */}
+      <section className="bg-slate-900/40 p-6 rounded-3xl border border-[#1e294b] shadow-xl text-slate-100 font-sans mb-8">
+        <div className="flex items-center gap-2 mb-6 border-b border-[#1e294b]/60 pb-4 select-none">
+          <Layers className="w-5 h-5 text-sky-450 animate-pulse" />
+          <div>
+            <h3 className="font-display font-extrabold text-white text-sm uppercase tracking-tight">MeshDrop Bitfield Chunks Monitor</h3>
+            <p className="text-slate-400 text-[11px] mt-0.5 leading-relaxed">Dynamic segment transfers. Files divide into 256KB blocks with secure verification hashes to allow multi-peer concurrent fetching and automatic resume on contact.</p>
+          </div>
+        </div>
+
+        <div className="bg-[#050912] p-4 rounded-2xl border border-slate-900 space-y-4">
+          <div className="flex justify-between items-center text-xs font-mono">
+            <div>
+              <span className="font-bold text-slate-100 select-all">File: distributed_consensus_core.pdf</span>
+              <p className="text-[10px] text-slate-500 mt-1 uppercase">Block Div: 5 segments x 256KB • Total Size: 1.25 MB</p>
+            </div>
+            <div className="text-right">
+              <span className="text-sky-400 font-bold block">{chunkProgress}% completed</span>
+              <span className="text-[8px] text-slate-500 font-bold uppercase">{chunkProgress === 100 ? 'Immutable Hash verified' : 'Transfer paused'}</span>
+            </div>
+          </div>
+
+          {/* Segment Blocks Row */}
+          <div className="grid grid-cols-5 gap-2.5 pt-1 select-none">
+            {chunks.map((chk, idx) => (
+              <div key={idx} className="space-y-1.5 text-center">
+                <motion.div
+                  animate={chk.complete ? { scale: 1, filter: 'brightness(1)' } : chk.loading ? { scale: [1, 1.05, 1], filter: 'brightness(1.2)' } : {}}
+                  transition={chk.loading ? { repeat: Infinity, duration: 1 } : {}}
+                  className={`h-11 rounded-xl border flex items-center justify-center font-mono text-[10px] uppercase font-extrabold transition-all shadow-md ${
+                    chk.complete
+                      ? 'bg-emerald-950/70 border-emerald-500 text-emerald-450'
+                      : chk.loading
+                      ? 'bg-sky-950/40 border-sky-600 text-sky-450'
+                      : 'bg-slate-905 border-slate-800 text-slate-600'
+                  }`}
+                >
+                  {chk.complete ? 'OK' : chk.loading ? '...' : 'WAIT'}
+                </motion.div>
+                <p className="text-[8px] font-mono font-bold text-slate-500 text-center">BLK {idx}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Dynamic Bitfield array text */}
+          <div className="bg-slate-950/40 p-3 rounded-xl font-mono text-[9px] text-slate-400 flex flex-wrap items-center justify-between gap-1 select-all">
+            <span>BITFIELD STRING STATUS:</span>
+            <span className="text-white font-extrabold text-[10px] bg-slate-950 px-2 py-0.5 rounded border border-slate-900">
+              [{chunks.map(c => c.complete ? '1' : '0').join(', ')}]
+            </span>
+          </div>
+
+          {/* Simulate Action buttons */}
+          {chunkProgress < 100 ? (
+            <button
+              onClick={handleSimulateChunkDownload}
+              disabled={isSimulatingChunks}
+              className="w-full bg-[#11192e] hover:bg-[#16223f] border border-[#1e294b] text-sky-400 font-extrabold py-3 text-xs rounded-xl flex items-center justify-center gap-1.5 transition-all cursor-pointer font-sans uppercase"
+            >
+              <Play className="w-3.5 h-3.5 fill-current" /> {isSimulatingChunks ? 'Bitfield Exchange Handshake...' : 'Simulate Segment Auto-Resume Pull'}
+            </button>
+          ) : (
+            <div className="bg-emerald-950/25 border border-emerald-800/40 rounded-xl p-3 flex items-center gap-2 text-xs text-emerald-250 select-none">
+              <CheckCircle className="w-4 h-4 text-emerald-450" />
+              <span>Full store-and-forward chunk replication verified. This device is now SEEDING this packet over local Wi-Fi buffers!</span>
+            </div>
+          )}
+        </div>
+      </section>
 
       {/* Live ledger console diagnostics */}
       <section className="bg-slate-900 rounded-3xl p-5 border border-slate-700 font-mono text-[10px] text-slate-300 shadow-xl relative overflow-hidden">

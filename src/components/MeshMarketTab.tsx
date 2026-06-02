@@ -1,9 +1,10 @@
-import { useState } from 'react';
-import { Radio, Download, Users, RefreshCw, Sparkles, Check, FileCheck, Shield, Disc, Network } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Radio, Download, Users, RefreshCw, Sparkles, Check, FileCheck, Shield, Disc, Network, Megaphone, AlarmClock, MessageSquare } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { MeshFile } from '../types';
 import PeerMap from './PeerMap';
 import { INITIAL_PEERS } from '../data';
+import { SQLiteEngine, SQLiteCrowdnetAlert } from './SQLiteDB';
 
 interface MeshMarketTabProps {
   trendingFiles: MeshFile[];
@@ -20,6 +21,29 @@ export default function MeshMarketTab({
   const [scanProgressText, setScanProgressText] = useState('Standby');
   const [localPeers, setLocalPeers] = useState(INITIAL_PEERS);
   const [discoveredCount, setDiscoveredCount] = useState(12);
+
+  // CrowdNet states
+  const [alerts, setAlerts] = useState<SQLiteCrowdnetAlert[]>([]);
+  const [newNoticeText, setNewNoticeText] = useState('');
+  const [noticeMinutesTTL, setNoticeMinutesTTL] = useState(240);
+
+  useEffect(() => {
+    loadAlerts();
+  }, []);
+
+  const loadAlerts = () => {
+    const loaded = SQLiteEngine.getCrowdnetAlerts();
+    setAlerts(loaded);
+  };
+
+  const handleCreateNotice = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newNoticeText.trim()) return;
+
+    SQLiteEngine.insertCrowdnetAlert(newNoticeText, 'u-self', 'You', noticeMinutesTTL);
+    setNewNoticeText('');
+    loadAlerts();
+  };
 
   const startDiscoveryScan = () => {
     if (isScanning) return;
@@ -235,6 +259,82 @@ export default function MeshMarketTab({
               </div>
             );
           })}
+        </div>
+      </section>
+
+      {/* CrowdNet Epidemic Gossip notices block */}
+      <section className="bg-slate-900/30 p-6 rounded-3xl border border-[#1e294b] shadow-xl text-slate-100 font-sans mb-8">
+        <div className="flex items-center gap-2 mb-6 border-b border-[#1e294b]/60 pb-4 select-none">
+          <Megaphone className="w-5 h-5 text-amber-500" />
+          <div>
+            <h3 className="font-display font-extrabold text-white text-sm uppercase tracking-tight">CrowdNet Gossip Alerts / Notices</h3>
+            <p className="text-slate-400 text-[11px] mt-0.5 leading-relaxed">Epidemic multi-hop emergency notice relays. No cloud is involved — messages carry forward node-to-node.</p>
+          </div>
+        </div>
+
+        {/* Input box */}
+        <form onSubmit={handleCreateNotice} className="bg-slate-950/70 p-4 rounded-2xl border border-slate-900 space-y-3 mb-6">
+          <label className="text-[9px] font-mono font-bold tracking-wider text-slate-500 uppercase block">Broadcast Campus Emergency Notice</label>
+          
+          <input
+            type="text"
+            value={newNoticeText}
+            onChange={(e) => setNewNoticeText(e.target.value)}
+            className="w-full bg-[#070b14] border border-[#1e294b] focus:border-amber-500 rounded-xl px-3 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-amber-500/20 transition-all"
+            placeholder="e.g., Final Exam room changed to Hall B, wifi is down."
+          />
+
+          <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3">
+            <div className="flex items-center gap-1.5">
+              <AlarmClock className="w-4 h-4 text-slate-500" />
+              <span className="text-[10px] font-semibold text-slate-400">Time-To-Live (TTL):</span>
+              <select
+                value={noticeMinutesTTL}
+                onChange={(e) => setNoticeMinutesTTL(Number(e.target.value))}
+                className="bg-slate-900 text-slate-200 border border-slate-850 px-2 py-1 text-[10px] rounded focus:outline-none focus:border-amber-500 font-bold cursor-pointer"
+              >
+                <option value={60}>1 Hour TTL</option>
+                <option value={240}>4 Hours TTL</option>
+                <option value={1440}>24 Hours TTL</option>
+              </select>
+            </div>
+
+            <button
+              type="submit"
+              className="bg-amber-600 hover:bg-amber-500 text-white font-extrabold px-5 py-2 rounded-xl text-[11px] transition-all shrink-0 cursor-pointer text-center font-sans uppercase"
+            >
+              rel_broadcast notices
+            </button>
+          </div>
+        </form>
+
+        {/* Real-time notices cards */}
+        <div className="space-y-3">
+          <h4 className="font-mono text-[9px] uppercase font-bold text-slate-500 tracking-wider">Active Relayed Notices</h4>
+          {alerts.length === 0 ? (
+            <p className="text-[10px] text-slate-500 font-medium">No epidemic notices currently in local storage buffer.</p>
+          ) : (
+            <div className="grid grid-cols-1 gap-3">
+              {alerts.map(al => (
+                <div key={al.alert_id} className="bg-[#050912]/80 p-4 rounded-xl border border-[#1e294b] hover:border-amber-500/30 transition-all flex flex-col justify-between">
+                  <div className="flex justify-between items-start gap-3 mb-2">
+                    <div className="min-w-0">
+                      <p className="text-xs font-semibold text-slate-100 leading-relaxed font-sans">{al.message}</p>
+                      <span className="text-[9px] text-[#38bdf8] font-mono mt-1.5 block">RELAY SENDER: {al.sender_name} ({al.sender_peer_id})</span>
+                    </div>
+                    <span className="text-[9px] bg-amber-950/40 text-amber-400 border border-amber-900/30 px-2.5 py-0.5 rounded-full font-bold uppercase tracking-wide font-mono flex-shrink-0 select-none">
+                      Hops: {al.hop_count}
+                    </span>
+                  </div>
+
+                  <div className="flex justify-between items-center text-[9px] font-mono text-slate-500 pt-3 border-t border-[#1e294b]/40 mt-2 select-none">
+                    <span>CREATED: {al.created_at}</span>
+                    <span className="text-amber-500 font-bold">EXPIRES: {al.expires_at}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

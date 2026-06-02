@@ -32,7 +32,8 @@ import {
   Activity,
   CloudLightning,
   FileCheck2,
-  MessageSquare
+  MessageSquare,
+  FileText
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
@@ -44,6 +45,7 @@ import MeshMarketTab from './components/MeshMarketTab';
 import MeshDropTab from './components/MeshDropTab';
 import PeersTab from './components/PeersTab';
 import ChatTab from './components/ChatTab';
+import SyncNoteTab from './components/SyncNoteTab';
 import { SQLiteEngine, SQLiteUser } from './components/SQLiteDB';
 
 export default function App() {
@@ -61,7 +63,7 @@ export default function App() {
   const [files, setFiles] = useState<MeshFile[]>(INITIAL_FILES);
   const [transfers, setTransfers] = useState<ActiveTransfer[]>(INITIAL_TRANSFERS);
   const [peers, setPeers] = useState<PeerNode[]>(INITIAL_PEERS);
-  const [currentTab, setCurrentTab] = useState<'home' | 'library' | 'market' | 'meshdrop' | 'peers' | 'chat'>('home');
+  const [currentTab, setCurrentTab] = useState<'home' | 'library' | 'market' | 'meshdrop' | 'peers' | 'chat' | 'syncnote'>('home');
   
   // --- Simulated Actions & Settings State ---
   const [pausedIds, setPausedIds] = useState<string[]>([]);
@@ -699,7 +701,7 @@ export default function App() {
       <div className="max-w-6xl mx-auto px-6 py-8 flex gap-8">
         
         {/* Desktop Sidebar Navigation Panel */}
-        <aside className="w-60 shrink-0 hidden md:flex flex-col bg-[#0a0f1d] border border-[#1e294b] rounded-3xl h-[440px] sticky top-28 shadow-2xl overflow-hidden py-5 select-none">
+        <aside className="w-60 shrink-0 hidden md:flex flex-col bg-[#0a0f1d] border border-[#1e294b] rounded-3xl h-auto pb-5 sticky top-28 shadow-2xl overflow-hidden py-5 select-none animate-fade-in">
           <p className="text-[10px] font-bold font-mono text-slate-500 uppercase tracking-widest px-5 mb-4">STUDY MENU</p>
           
           <div className="flex flex-col flex-1 gap-1">
@@ -722,18 +724,18 @@ export default function App() {
                   : 'border-l-transparent text-slate-400 hover:text-white hover:bg-white/5'
               }`}
             >
-              <BookOpen className="w-4 h-4" /> Educational Library
+              <BookOpen className="w-4 h-4" /> Mesh LMS Portal
             </button>
 
             <button 
               onClick={() => setCurrentTab('market')}
               className={`w-full flex items-center gap-3 px-5 py-3.5 text-xs font-bold leading-none transition-all border-l-4 ${
                 currentTab === 'market' 
-                  ? 'border-l-[#0ea5e9] text-white bg-white/5 font-bold shadow-inner' 
+                   ? 'border-l-[#0ea5e9] text-white bg-white/5 font-bold shadow-inner' 
                   : 'border-l-transparent text-slate-400 hover:text-white hover:bg-white/5'
               }`}
             >
-              <Compass className="w-4 h-4" /> Discover Nearby
+              <Compass className="w-4 h-4" /> Epidemic Gossip Alert
             </button>
 
             <button 
@@ -744,7 +746,18 @@ export default function App() {
                   : 'border-l-transparent text-slate-400 hover:text-white hover:bg-white/5'
               }`}
             >
-              <Send className="w-4 h-4 fill-current" /> Study Share Engine
+              <Send className="w-4 h-4 fill-current" /> MeshDrop File Sync
+            </button>
+
+            <button 
+              onClick={() => setCurrentTab('syncnote')}
+              className={`w-full flex items-center gap-3 px-5 py-3.5 text-xs font-bold leading-none transition-all border-l-4 ${
+                currentTab === 'syncnote' 
+                  ? 'border-l-[#0ea5e9] text-white bg-white/5 font-bold shadow-inner' 
+                  : 'border-l-transparent text-slate-400 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <FileText className="w-4 h-4 text-sky-400" /> SyncNote Editor
             </button>
 
             <button 
@@ -939,6 +952,7 @@ export default function App() {
             <LibraryTab 
               files={files} 
               onGetFile={handleGetFile}
+              activeUser={activeUser}
             />
           )}
 
@@ -956,6 +970,14 @@ export default function App() {
               peers={peers}
               onCancelTransfer={handleCancelTransfer}
               onUploadFile={handleUploadFile}
+              showToast={showToast}
+            />
+          )}
+
+          {currentTab === 'syncnote' && (
+            <SyncNoteTab 
+              showToast={showToast}
+              activeUser={activeUser}
             />
           )}
 

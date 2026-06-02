@@ -49,12 +49,68 @@ export interface SQLLogEntry {
   status: 'success' | 'warning';
 }
 
+// Custom Research Schema interfaces based on Thesis Specification
+export interface SQLiteSyncNote {
+  note_id: string;
+  title: string;
+  crdt_state: string; // Holds compressed markup state with simulated operational changes
+  last_modified: string;
+  version_vector: string; // JSON Vector Clocks for merge logic
+}
+
+export interface SQLiteLMSContent {
+  content_id: string;
+  title: string;
+  content_type: 'LECTURE_SLIDE' | 'QUIZ_JSON';
+  payload: string; // Raw markdown or quiz JSON questions
+}
+
+export interface SQLiteLMSProgress {
+  progress_id: string;
+  student_peer_id: string;
+  content_id: string;
+  score: number;
+  completed_at: string;
+  is_synced_to_cloud: number; // 0 or 1
+}
+
+export interface SQLiteCrowdnetAlert {
+  alert_id: string;
+  message: string;
+  sender_peer_id: string;
+  sender_name: string;
+  created_at: string;
+  expires_at: string;
+  hop_count: number;
+}
+
+export interface SQLiteMeshDropFile {
+  file_hash: string;
+  file_name: string;
+  total_chunks: number;
+  destination_peer_id: string;
+}
+
+export interface SQLiteFileChunk {
+  chunk_id: string;
+  file_hash: string;
+  chunk_index: number;
+  chunk_data: string;
+  is_complete: number;
+}
+
 const STORAGE_KEYS = {
   USERS: 'sqlite_user_profiles',
   GROUPS: 'sqlite_groups',
   MESSAGES: 'sqlite_messages',
   CURRENT_USER_ID: 'sqlite_active_user_id',
   SQL_LOGS: 'sqlite_transaction_logs',
+  SYNC_NOTES: 'sqlite_sync_notes',
+  LMS_CONTENT: 'sqlite_lms_content',
+  LMS_PROGRESS: 'sqlite_lms_progress',
+  CROWDNET_ALERTS: 'sqlite_crowdnet_alerts',
+  MESHDROP_FILES: 'sqlite_mesh_drop_files',
+  FILE_CHUNKS: 'sqlite_file_chunks',
 };
 
 // Default bootstrap database records
@@ -178,6 +234,91 @@ const BOOTSTRAP_MESSAGES: SQLiteMessage[] = [
   }
 ];
 
+const BOOTSTRAP_SYNC_NOTES: SQLiteSyncNote[] = [
+  {
+    note_id: 'n-distributed-consensus',
+    title: 'Raft consensus & Byzantine notes',
+    crdt_state: '# Distributed Consensus Notes\n\n- Paxos assumes non-byzantine faults\n- Raft uses strong leader election\n- In a local mesh, we can simulate logical clocks using Vector Clocks.',
+    last_modified: '2026-06-02 12:00:00',
+    version_vector: '{"AJ": 14, "SM": 8}'
+  },
+  {
+    note_id: 'n-epidemic-routing',
+    title: 'Epidemic & Gossip routing research',
+    crdt_state: '# Epidemic Gossip Overview\n\n- Store-Carry-Forward relies on node mobility.\n- Epidemic routing maximizes message diffusion speed but introduces heavy replication overhead.\n- TTL protects database storage from exploding.',
+    last_modified: '2026-06-02 14:30:00',
+    version_vector: '{"AJ": 5, "LD": 9}'
+  }
+];
+
+const BOOTSTRAP_LMS_CONTENT: SQLiteLMSContent[] = [
+  {
+    content_id: 'lms-quiz-dist',
+    title: 'Distributed Systems Unit 1 Quiz',
+    content_type: 'QUIZ_JSON',
+    payload: JSON.stringify([
+      { q: "Which protocol is designed for fault tolerance with non-byzantine nodes?", options: ["Raft", "PBFT", "HTTP/2", "SMTP"], correct: 0 },
+      { q: "What does CRDT stand for?", options: ["Certified Radical Data Type", "Conflict-free Replicated Data Type", "Centralized Realtime Data Transfer", "Correct Roundtrip Delay Tracker"], correct: 1 },
+      { q: "What is the primary trade-off of Epidemic Routing?", options: ["Low network coverage", "Extremely high message replication overhead", "Requires a centralized cloud", "Slow point-to-point speed"], correct: 1 }
+    ])
+  },
+  {
+    content_id: 'lms-slide-crdt',
+    title: 'CRDT vs Operational Transformation (Study Slide)',
+    content_type: 'LECTURE_SLIDE',
+    payload: '# Lecture Slides: Peer-to-Peer State Merging\n\n## 1. Operational Transformation (OT)\n- Needs a central authority/server to order operations (e.g., Google Docs).\n\n## 2. Conflict-free Replicated Data Types (CRDT)\n- Mathematically guarantees state convergence with any network latency.\n- Edits are modeled as semi-lattices with commutative, associative, and idempotent merge operations.'
+  }
+];
+
+const BOOTSTRAP_LMS_PROGRESS: SQLiteLMSProgress[] = [
+  {
+    progress_id: 'grade-9938',
+    student_peer_id: 'p-112', // Sarah Miller
+    content_id: 'lms-quiz-dist',
+    score: 100,
+    completed_at: '2026-06-02 21:00:00',
+    is_synced_to_cloud: 0
+  }
+];
+
+const BOOTSTRAP_CROWDNET_ALERTS: SQLiteCrowdnetAlert[] = [
+  {
+    alert_id: 'alert-1',
+    message: 'Campus Wifi in Science Building is down. Switching all study groups to MeshLearn!',
+    sender_peer_id: 'p-node-entry', // Alexander
+    sender_name: 'Alexander Smart',
+    created_at: '2026-06-02 21:40:00',
+    expires_at: '2026-06-03 01:40:00',
+    hop_count: 2
+  },
+  {
+    alert_id: 'alert-2',
+    message: 'Group study session for Distributed Systems final starting in Rm 402 at 10 AM tomorrow.',
+    sender_peer_id: 'u-self',
+    sender_name: 'Alex Johnson',
+    created_at: '2026-06-02 22:15:00',
+    expires_at: '2026-06-03 10:00:04',
+    hop_count: 1
+  }
+];
+
+const BOOTSTRAP_MESHDROP_FILES: SQLiteMeshDropFile[] = [
+  {
+    file_hash: 'hash-8a9d1d3f',
+    file_name: 'distributed_consensus_core.pdf',
+    total_chunks: 5,
+    destination_peer_id: 'p-112' // Sarah Miller
+  }
+];
+
+const BOOTSTRAP_FILE_CHUNKS: SQLiteFileChunk[] = [
+  { chunk_id: 'hash-8a9d1d3f_0', file_hash: 'hash-8a9d1d3f', chunk_index: 0, chunk_data: '[256KB Binary Block]', is_complete: 1 },
+  { chunk_id: 'hash-8a9d1d3f_1', file_hash: 'hash-8a9d1d3f', chunk_index: 1, chunk_data: '[256KB Binary Block]', is_complete: 1 },
+  { chunk_id: 'hash-8a9d1d3f_2', file_hash: 'hash-8a9d1d3f', chunk_index: 2, chunk_data: '[256KB Binary Block]', is_complete: 1 },
+  { chunk_id: 'hash-8a9d1d3f_3', file_hash: 'hash-8a9d1d3f', chunk_index: 3, chunk_data: '[256KB Binary Block]', is_complete: 0 },
+  { chunk_id: 'hash-8a9d1d3f_4', file_hash: 'hash-8a9d1d3f', chunk_index: 4, chunk_data: '[256KB Binary Block]', is_complete: 0 }
+];
+
 export class SQLiteEngine {
   private static logTransaction(statement: string, rowsAffected: number = 0, status: 'success' | 'warning' = 'success') {
     const logs = this.getLogs();
@@ -234,6 +375,37 @@ export class SQLiteEngine {
     // Active User session is not set by default so the user can register/log in normally on download
     if (!localStorage.getItem(STORAGE_KEYS.CURRENT_USER_ID)) {
       // Start as empty/null session
+    }
+
+    // Boostrap research tables specified in academic thesis
+    if (!localStorage.getItem(STORAGE_KEYS.SYNC_NOTES)) {
+      localStorage.setItem(STORAGE_KEYS.SYNC_NOTES, JSON.stringify(BOOTSTRAP_SYNC_NOTES));
+      this.logTransaction("CREATE TABLE sync_notes (note_id TEXT PRIMARY KEY, title TEXT, crdt_state TEXT, last_modified TIMESTAMP, version_vector TEXT);", BOOTSTRAP_SYNC_NOTES.length);
+    }
+
+    if (!localStorage.getItem(STORAGE_KEYS.LMS_CONTENT)) {
+      localStorage.setItem(STORAGE_KEYS.LMS_CONTENT, JSON.stringify(BOOTSTRAP_LMS_CONTENT));
+      this.logTransaction("CREATE TABLE lms_content (content_id TEXT PRIMARY KEY, title TEXT, content_type TEXT, payload TEXT);", BOOTSTRAP_LMS_CONTENT.length);
+    }
+
+    if (!localStorage.getItem(STORAGE_KEYS.LMS_PROGRESS)) {
+      localStorage.setItem(STORAGE_KEYS.LMS_PROGRESS, JSON.stringify(BOOTSTRAP_LMS_PROGRESS));
+      this.logTransaction("CREATE TABLE lms_progress (progress_id TEXT PRIMARY KEY, student_peer_id TEXT, content_id TEXT, score INTEGER, completed_at TIMESTAMP, is_synced_to_cloud INTEGER DEFAULT 0);", BOOTSTRAP_LMS_PROGRESS.length);
+    }
+
+    if (!localStorage.getItem(STORAGE_KEYS.CROWDNET_ALERTS)) {
+      localStorage.setItem(STORAGE_KEYS.CROWDNET_ALERTS, JSON.stringify(BOOTSTRAP_CROWDNET_ALERTS));
+      this.logTransaction("CREATE TABLE crowdnet_alerts (alert_id TEXT PRIMARY KEY, message TEXT, sender_peer_id TEXT, created_at TIMESTAMP, expires_at TIMESTAMP, hop_count INTEGER DEFAULT 0);", BOOTSTRAP_CROWDNET_ALERTS.length);
+    }
+
+    if (!localStorage.getItem(STORAGE_KEYS.MESHDROP_FILES)) {
+      localStorage.setItem(STORAGE_KEYS.MESHDROP_FILES, JSON.stringify(BOOTSTRAP_MESHDROP_FILES));
+      this.logTransaction("CREATE TABLE mesh_drop_files (file_hash TEXT PRIMARY KEY, file_name TEXT, total_chunks INTEGER, destination_peer_id TEXT);", BOOTSTRAP_MESHDROP_FILES.length);
+    }
+
+    if (!localStorage.getItem(STORAGE_KEYS.FILE_CHUNKS)) {
+      localStorage.setItem(STORAGE_KEYS.FILE_CHUNKS, JSON.stringify(BOOTSTRAP_FILE_CHUNKS));
+      this.logTransaction("CREATE TABLE file_chunks (chunk_id TEXT PRIMARY KEY, file_hash TEXT, chunk_index INTEGER, chunk_data TEXT, is_complete INTEGER DEFAULT 0, FOREIGN KEY(file_hash) REFERENCES mesh_drop_files(file_hash) ON DELETE CASCADE);", BOOTSTRAP_FILE_CHUNKS.length);
     }
   }
 
@@ -411,6 +583,125 @@ export class SQLiteEngine {
     }
   }
 
+  // --- THESIS SPECIFIC QUERY REPOSITORIES ---
+
+  static getSyncNotes(): SQLiteSyncNote[] {
+    const data = localStorage.getItem(STORAGE_KEYS.SYNC_NOTES) || '[]';
+    this.logTransaction("SELECT * FROM sync_notes ORDER BY last_modified DESC;");
+    return JSON.parse(data);
+  }
+
+  static saveSyncNote(noteId: string, title: string, crdtState: string, versionVector: string): SQLiteSyncNote {
+    const notes = this.getSyncNotes();
+    const index = notes.findIndex(n => n.note_id === noteId);
+    
+    const timestamp = new Date().toISOString().replace('T', ' ').substr(0, 19);
+    const updatedNote: SQLiteSyncNote = {
+      note_id: noteId,
+      title,
+      crdt_state: crdtState,
+      last_modified: timestamp,
+      version_vector: versionVector
+    };
+
+    if (index !== -1) {
+      notes[index] = updatedNote;
+      this.logTransaction(`UPDATE sync_notes SET title = '${title.replace(/'/g, "''")}', crdt_state = '[CRDT State Vector]', last_modified = '${timestamp}', version_vector = '${versionVector}' WHERE note_id = '${noteId}';`, 1);
+    } else {
+      notes.push(updatedNote);
+      this.logTransaction(`INSERT INTO sync_notes (note_id, title, crdt_state, last_modified, version_vector) VALUES ('${noteId}', '${title.replace(/'/g, "''")}', '[CRDT Delta payload]', '${timestamp}', '${versionVector}');`, 1);
+    }
+
+    localStorage.setItem(STORAGE_KEYS.SYNC_NOTES, JSON.stringify(notes));
+    return updatedNote;
+  }
+
+  static getLmsContent(): SQLiteLMSContent[] {
+    const data = localStorage.getItem(STORAGE_KEYS.LMS_CONTENT) || '[]';
+    this.logTransaction("SELECT * FROM lms_content;");
+    return JSON.parse(data);
+  }
+
+  static getLmsProgress(): SQLiteLMSProgress[] {
+    const data = localStorage.getItem(STORAGE_KEYS.LMS_PROGRESS) || '[]';
+    this.logTransaction("SELECT * FROM lms_progress ORDER BY completed_at DESC;");
+    return JSON.parse(data);
+  }
+
+  static insertProgress(studentPeerId: string, contentId: string, score: number): SQLiteLMSProgress {
+    const progress = this.getLmsProgress();
+    const newProgress: SQLiteLMSProgress = {
+      progress_id: 'grade-' + Math.random().toString(36).substr(2, 9),
+      student_peer_id: studentPeerId,
+      content_id: contentId,
+      score,
+      completed_at: new Date().toISOString().replace('T', ' ').substr(0, 19),
+      is_synced_to_cloud: 0
+    };
+
+    progress.push(newProgress);
+    localStorage.setItem(STORAGE_KEYS.LMS_PROGRESS, JSON.stringify(progress));
+    
+    this.logTransaction(`INSERT INTO lms_progress (progress_id, student_peer_id, content_id, score, completed_at, is_synced_to_cloud) VALUES ('${newProgress.progress_id}', '${studentPeerId}', '${contentId}', ${score}, '${newProgress.completed_at}', 0);`, 1);
+    
+    return newProgress;
+  }
+
+  static getCrowdnetAlerts(): SQLiteCrowdnetAlert[] {
+    const data = localStorage.getItem(STORAGE_KEYS.CROWDNET_ALERTS) || '[]';
+    this.logTransaction("SELECT * FROM crowdnet_alerts ORDER BY created_at DESC;");
+    return JSON.parse(data);
+  }
+
+  static insertCrowdnetAlert(message: string, senderPeerId: string, senderName: string, expiresMinutes: number = 240): SQLiteCrowdnetAlert {
+    const alerts = this.getCrowdnetAlerts();
+    
+    const now = new Date();
+    const expires = new Date(now.getTime() + expiresMinutes * 60000);
+    
+    const newAlert: SQLiteCrowdnetAlert = {
+      alert_id: 'alert-' + Math.random().toString(36).substr(2, 9),
+      message,
+      sender_peer_id: senderPeerId,
+      sender_name: senderName,
+      created_at: now.toISOString().replace('T', ' ').substr(0, 19),
+      expires_at: expires.toISOString().replace('T', ' ').substr(0, 19),
+      hop_count: 1
+    };
+
+    alerts.push(newAlert);
+    localStorage.setItem(STORAGE_KEYS.CROWDNET_ALERTS, JSON.stringify(alerts));
+    
+    this.logTransaction(`INSERT INTO crowdnet_alerts (alert_id, message, sender_peer_id, sender_name, created_at, expires_at, hop_count) VALUES ('${newAlert.alert_id}', '${message.replace(/'/g, "''")}', '${senderPeerId}', '${senderName.replace(/'/g, "''")}', '${newAlert.created_at}', '${newAlert.expires_at}', 1);`, 1);
+    
+    return newAlert;
+  }
+
+  static getMeshDropFiles(): SQLiteMeshDropFile[] {
+    const data = localStorage.getItem(STORAGE_KEYS.MESHDROP_FILES) || '[]';
+    this.logTransaction("SELECT * FROM mesh_drop_files;");
+    return JSON.parse(data);
+  }
+
+  static getFileChunks(fileHash: string): SQLiteFileChunk[] {
+    const data = localStorage.getItem(STORAGE_KEYS.FILE_CHUNKS) || '[]';
+    const allChunks: SQLiteFileChunk[] = JSON.parse(data);
+    const filtered = allChunks.filter(c => c.file_hash === fileHash);
+    this.logTransaction(`SELECT * FROM file_chunks WHERE file_hash = '${fileHash}' ORDER BY chunk_index ASC;`, filtered.length);
+    return filtered;
+  }
+
+  static updateChunkStatus(chunkId: string, isComplete: number) {
+    const data = localStorage.getItem(STORAGE_KEYS.FILE_CHUNKS) || '[]';
+    const allChunks: SQLiteFileChunk[] = JSON.parse(data);
+    const idx = allChunks.findIndex(c => c.chunk_id === chunkId);
+    if (idx !== -1) {
+      allChunks[idx].is_complete = isComplete;
+      localStorage.setItem(STORAGE_KEYS.FILE_CHUNKS, JSON.stringify(allChunks));
+      this.logTransaction(`UPDATE file_chunks SET is_complete = ${isComplete} WHERE chunk_id = '${chunkId}';`, 1);
+    }
+  }
+
   static executeCustomSQL(sqlStatement: string): { success: boolean; rowsAffected: number; data?: any[]; error?: string } {
     const cleanSql = sqlStatement.trim().toUpperCase();
     this.logTransaction(sqlStatement, 0, 'success');
@@ -427,6 +718,26 @@ export class SQLiteEngine {
        const data = JSON.parse(localStorage.getItem(STORAGE_KEYS.USERS) || '[]');
        return { success: true, rowsAffected: data.length, data };
     }
+    if (cleanSql.startsWith("SELECT * FROM SYNC_NOTES")) {
+       const data = JSON.parse(localStorage.getItem(STORAGE_KEYS.SYNC_NOTES) || '[]');
+       return { success: true, rowsAffected: data.length, data };
+    }
+    if (cleanSql.startsWith("SELECT * FROM LMS_CONTENT")) {
+       const data = JSON.parse(localStorage.getItem(STORAGE_KEYS.LMS_CONTENT) || '[]');
+       return { success: true, rowsAffected: data.length, data };
+    }
+    if (cleanSql.startsWith("SELECT * FROM LMS_PROGRESS")) {
+       const data = JSON.parse(localStorage.getItem(STORAGE_KEYS.LMS_PROGRESS) || '[]');
+       return { success: true, rowsAffected: data.length, data };
+    }
+    if (cleanSql.startsWith("SELECT * FROM CROWDNET_ALERTS")) {
+       const data = JSON.parse(localStorage.getItem(STORAGE_KEYS.CROWDNET_ALERTS) || '[]');
+       return { success: true, rowsAffected: data.length, data };
+    }
+    if (cleanSql.startsWith("SELECT * FROM FILE_CHUNKS")) {
+       const data = JSON.parse(localStorage.getItem(STORAGE_KEYS.FILE_CHUNKS) || '[]');
+       return { success: true, rowsAffected: data.length, data };
+    }
     if (cleanSql.startsWith("DELETE FROM MESSAGES")) {
        localStorage.setItem(STORAGE_KEYS.MESSAGES, JSON.stringify([]));
        this.logTransaction("TRUNCATE TABLE messages;", 0, 'warning');
@@ -436,7 +747,7 @@ export class SQLiteEngine {
     return { 
       success: false, 
       rowsAffected: 0, 
-      error: "Command executed, but read-only custom parsing supported only for 'SELECT * FROM messages', 'SELECT * FROM groups', 'SELECT * FROM users', and 'DELETE FROM messages'." 
+      error: "Command executed, but read-only custom parsing supported only for direct SELECT queries on users, groups, messages, sync_notes, lms_content, lms_progress, crowdnet_alerts, and file_chunks." 
     };
   }
 
@@ -444,6 +755,12 @@ export class SQLiteEngine {
     localStorage.removeItem(STORAGE_KEYS.USERS);
     localStorage.removeItem(STORAGE_KEYS.GROUPS);
     localStorage.removeItem(STORAGE_KEYS.MESSAGES);
+    localStorage.removeItem(STORAGE_KEYS.SYNC_NOTES);
+    localStorage.removeItem(STORAGE_KEYS.LMS_CONTENT);
+    localStorage.removeItem(STORAGE_KEYS.LMS_PROGRESS);
+    localStorage.removeItem(STORAGE_KEYS.CROWDNET_ALERTS);
+    localStorage.removeItem(STORAGE_KEYS.MESHDROP_FILES);
+    localStorage.removeItem(STORAGE_KEYS.FILE_CHUNKS);
     localStorage.removeItem(STORAGE_KEYS.CURRENT_USER_ID);
     localStorage.removeItem(STORAGE_KEYS.SQL_LOGS);
     this.bootstrap();
